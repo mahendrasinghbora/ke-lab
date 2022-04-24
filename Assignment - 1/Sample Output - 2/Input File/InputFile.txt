@@ -1,0 +1,10 @@
+T1: a b
+T2: b d
+T3: x y
+T4: a c e
+T5: b c d
+T6: x a z
+T7: d b a
+T8: c e d
+T9: a b x e
+T10: z x a

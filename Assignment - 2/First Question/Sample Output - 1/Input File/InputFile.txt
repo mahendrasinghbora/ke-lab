@@ -1,0 +1,15 @@
+T1: a 
+T2: f b h g 
+T3: g 
+T4: e g a c 
+T5: a g h 
+T6: d h c a 
+T7: c 
+T8: a 
+T9: e a 
+T10: a 
+T11: c f e 
+T12: h c g d 
+T13: d e a h f 
+T14: d c f 
+T15: e g 

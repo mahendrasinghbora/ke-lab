@@ -1,0 +1,336 @@
+CREATE TABLE location_table
+(
+    location_key      VARCHAR(10) NOT NULL,
+    street            VARCHAR(50),
+    city              VARCHAR(50),
+    province_or_state VARCHAR(20),
+    country           VARCHAR(30),
+    PRIMARY KEY (location_key)
+);
+
+INSERT ALL
+    INTO location_table
+VALUES ('NDLS', 'New Delhi', 'New Delhi', 'New Delhi', 'India')
+INTO location_table
+VALUES ('NITW', 'Kazipet', 'Warangal', 'Telangana', 'India')
+INTO location_table
+VALUES ('BLR', 'Electronic City', 'Bangaluru', 'Karnataka', 'India')
+INTO location_table
+VALUES ('HLD', 'Haldwani', 'Nainital', 'Uttarakhand', 'India')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM location_table;
+
+CREATE TABLE branch_table
+(
+    branch_key  VARCHAR(10) NOT NULL,
+    branch_name VARCHAR(30),
+    branch_type VARCHAR(20),
+    PRIMARY KEY (branch_key)
+);
+
+INSERT ALL
+    INTO branch_table
+VALUES ('BR01', 'Northern Branch', 'Regional')
+INTO branch_table
+VALUES ('BR02', 'Southern Branch', 'Regional')
+INTO branch_table
+VALUES ('BR03', 'Main Branch', 'Country')
+INTO branch_table
+VALUES ('BR04', 'Western Branch', 'Regional')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM branch_table;
+
+CREATE TABLE item_table
+(
+    item_key      VARCHAR(10) NOT NULL,
+    item_name     VARCHAR(30),
+    brand         VARCHAR(30),
+    item_type     VARCHAR(20),
+    supplier_type VARCHAR(20),
+    PRIMARY KEY (item_key)
+);
+
+INSERT ALL
+    INTO item_table
+VALUES ('1', 'Mobile Phone', 'Nokia', 'Flip', 'Regular')
+INTO item_table
+VALUES ('2', 'Laptop', 'Dell', 'Touch', 'New')
+INTO item_table
+VALUES ('3', 'TV', 'Sony', 'Android', 'Regular')
+INTO item_table
+VALUES ('4', 'XBox', 'Microsoft', 'Console', 'New')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM item_table;
+
+CREATE TABLE time_table
+(
+    time_key        VARCHAR(10) NOT NULL,
+    day             VARCHAR(10),
+    day_of_the_week VARCHAR(20),
+    month_name      VARCHAR(20),
+    quarter         VARCHAR(20),
+    year            VARCHAR(4),
+    PRIMARY KEY (time_key)
+);
+
+INSERT ALL
+    INTO time_table
+VALUES ('T01', '12', 'Monday', 'January', 'I', '2021')
+INTO time_table
+VALUES ('T02', '07', 'Wednesday', 'October', 'IV', '2020')
+INTO time_table
+VALUES ('T03', '21', 'Sunday', 'May', 'II', '2021')
+INTO time_table
+VALUES ('T04', '24', 'Tuesday', 'December', 'IV', 2021)
+SELECT 1
+FROM DUAL;
+
+
+SELECT *
+FROM time_table;
+
+CREATE TABLE sales_table
+(
+    sales_key    VARCHAR(10) NOT NULL,
+    time_key     VARCHAR(10) NOT NULL,
+    item_key     VARCHAR(10) NOT NULL,
+    branch_key   VARCHAR(10) NOT NULL,
+    location_key VARCHAR(10) NOT NULL,
+    dollars_sold NUMBER(10, 2),
+    units_sold   NUMBER(5),
+    PRIMARY KEY (sales_key),
+    FOREIGN KEY (item_key) REFERENCES item_table (item_key),
+    FOREIGN KEY (location_key) REFERENCES location_table (location_key),
+    FOREIGN KEY (branch_key) REFERENCES branch_table (branch_key)
+);
+
+SELECT *
+FROM sales_table;
+
+INSERT ALL
+    INTO sales_table
+VALUES ('S01', 'T01', '1', 'BR01', 'NDLS', 500, 2)
+INTO sales_table
+VALUES ('S02', 'T02', '2', 'BR01', 'NDLS', 50000, 1)
+INTO sales_table
+VALUES ('S03', 'T01', '3', 'BR02', 'NITW', 10000, 2)
+INTO sales_table
+VALUES ('S04', 'T03', '1', 'BR03', 'BLR', 7000, 5)
+INTO sales_table
+VALUES ('S05', 'T04', '1', 'BR03', 'HLD', 70000, 2)
+INTO sales_table
+VALUES ('S06', 'T02', '4', 'BR03', 'BLR', 22000, 1)
+SELECT 1
+FROM DUAL;
+
+SELECT location_table.city AS "City", item_table.item_name, SUM(sales_table.dollars_sold) AS "Dollars Sold"
+FROM location_table
+         JOIN sales_table USING (location_key)
+         JOIN item_table USING (item_key)
+GROUP BY ROLLUP (location_table.city, item_table.item_name)
+ORDER BY location_table.city;
+
+SELECT location_table.city AS "City", SUM(sales_table.dollars_sold) AS "Dollars Sold"
+FROM sales_table
+         JOIN location_table USING (location_key)
+GROUP BY ROLLUP (location_table.city)
+ORDER BY location_table.city;
+
+SELECT item_table.item_name AS "Item Name", SUM(sales_table.dollars_sold) AS "Dollars Sold"
+FROM sales_table
+         JOIN item_table USING (item_key)
+GROUP BY ROLLUP (item_table.item_name)
+ORDER BY item_table.item_name;
+
+CREATE TABLE game_dimension_table
+(
+    game_id   VARCHAR(10) NOT NULL,
+    game_name VARCHAR(20) NOT NULL,
+    PRIMARY KEY (game_id)
+);
+
+INSERT ALL INTO game_dimension_table
+VALUES ('G01', 'Football')
+INTO game_dimension_table
+VALUES ('G02', 'Volleyball')
+INTO game_dimension_table
+VALUES ('G03', 'Cricket')
+INTO game_dimension_table
+VALUES ('G04', 'Hockey')
+INTO game_dimension_table
+VALUES ('G05', 'Basketball')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM game_dimension_table;
+
+CREATE TABLE location_dimension_table
+(
+    location_id   VARCHAR(10) NOT NULL,
+    location_name VARCHAR(30),
+    city          VARCHAR(30),
+    PRIMARY KEY (location_id)
+);
+
+INSERT ALL INTO location_dimension_table
+VALUES ('L01', 'NITW', 'Warangal')
+INTO location_dimension_table
+VALUES ('L02', 'Haldwani', 'Nainital')
+INTO location_dimension_table
+VALUES ('L03', 'Saket', 'New Delhi')
+INTO location_dimension_table
+VALUES ('L04', 'GM_Place', 'GM_Place')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM location_dimension_table;
+
+CREATE TABLE date_dimension_table
+(
+    date_id VARCHAR(10) NOT NULL,
+    day     NUMBER(2),
+    month   VARCHAR(20),
+    year    NUMBER(4),
+    PRIMARY KEY (date_id)
+);
+
+INSERT ALL INTO date_dimension_table
+VALUES ('D01', 12, 'July', 2003)
+INTO date_dimension_table
+VALUES ('D02', 13, 'August', 2010)
+INTO date_dimension_table
+VALUES ('D03', 21, 'May', 2021)
+INTO date_dimension_table
+VALUES ('D04', 05, 'December', 2020)
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM date_dimension_table;
+
+CREATE TABLE spectator_type_table
+(
+    type_id   VARCHAR(10) NOT NULL,
+    type_name VARCHAR(20) NOT NULL,
+    charge    NUMBER(5, 2),
+    PRIMARY KEY (type_id)
+);
+
+INSERT ALL INTO spectator_type_table
+VALUES ('T01', 'Student', 300)
+INTO spectator_type_table
+VALUES ('T02', 'Adult', 500)
+INTO spectator_type_table
+VALUES ('T03', 'Senior', 400)
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM spectator_type_table;
+
+CREATE TABLE spectator_dimension_table
+(
+    spectator_id   VARCHAR(10) NOT NULL,
+    spectator_name VARCHAR(30),
+    spectator_type VARCHAR(10) NOT NULL,
+    PRIMARY KEY (spectator_id),
+    FOREIGN KEY (spectator_type) REFERENCES spectator_type_table (type_id)
+);
+
+INSERT ALL INTO spectator_dimension_table
+VALUES ('SP01', 'John', 'T01')
+INTO spectator_dimension_table
+VALUES ('SP02', 'Jill', 'T01')
+INTO spectator_dimension_table
+VALUES ('SP03', 'Dave', 'T03')
+INTO spectator_dimension_table
+VALUES ('SP04', 'Rachel', 'T03')
+INTO spectator_dimension_table
+VALUES ('SP05', 'Nathan', 'T02')
+INTO spectator_dimension_table
+VALUES ('SP06', 'Nate', 'T02')
+SELECT 1
+FROM DUAL;
+
+SELECT *
+FROM spectator_dimension_table;
+
+CREATE TABLE sales_fact_table
+(
+    sales_id     VARCHAR(10) NOT NULL,
+    date_id      VARCHAR(10) NOT NULL,
+    spectator_id VARCHAR(10) NOT NULL,
+    game_id      VARCHAR(10) NOT NULL,
+    location_id  VARCHAR(10) NOT NULL,
+    count        NUMBER(5),
+    PRIMARY KEY (sales_id),
+    FOREIGN KEY (date_id) REFERENCES date_dimension_table (date_id),
+    FOREIGN KEY (spectator_id) REFERENCES spectator_dimension_table (spectator_id),
+    FOREIGN KEY (game_id) REFERENCES game_dimension_table (game_id),
+    FOREIGN KEY (location_id) REFERENCES location_dimension_table (location_id)
+);
+
+INSERT ALL INTO sales_fact_table
+VALUES ('S01', 'D02', 'SP01', 'G01', 'L04', 3)
+INTO sales_fact_table
+VALUES ('S02', 'D02', 'SP02', 'G02', 'L04', 2)
+INTO sales_fact_table
+VALUES ('S03', 'D01', 'SP03', 'G01', 'L02', 1)
+INTO sales_fact_table
+VALUES ('S04', 'D04', 'SP01', 'G03', 'L04', 2)
+INTO sales_fact_table
+VALUES ('S05', 'D03', 'SP04', 'G01', 'L01', 2)
+INTO sales_fact_table
+VALUES ('S06', 'D04', 'SP05', 'G05', 'L04', 1)
+INTO sales_fact_table
+VALUES ('S07', 'D02', 'SP06', 'G04', 'L03', 3)
+SELECT 1
+FROM DUAL;
+
+
+SELECT *
+FROM sales_fact_table;
+
+SELECT city, SUM(charge * count) AS "Total Charge Paid by Student Spectators"
+FROM spectator_type_table,
+     sales_fact_table,
+     location_dimension_table,
+     spectator_dimension_table,
+     date_dimension_table
+WHERE spectator_type_table.type_id = spectator_dimension_table.spectator_type
+  AND location_dimension_table.location_id = sales_fact_table.location_id
+  AND sales_fact_table.spectator_id = spectator_dimension_table.spectator_id
+  AND date_dimension_table.date_id = sales_fact_table.date_id
+  AND city = 'GM_Place'
+  AND year = '2010'
+  AND type_name = 'Student'
+GROUP BY ROLLUP (city);
+
+SELECT day, month, year, SUM(charge * count)
+FROM date_dimension_table,
+     sales_fact_table,
+     spectator_dimension_table,
+     spectator_type_table
+WHERE sales_fact_table.date_id = date_dimension_table.date_id
+  AND sales_fact_table.spectator_id = spectator_dimension_table.spectator_id
+  AND spectator_dimension_table.spectator_type = spectator_type_table.type_id
+GROUP BY ROLLUP (day, month, year);
+
+SELECT type_name, AVG(charge * count) AS "Average Charge Paid"
+FROM spectator_type_table,
+     sales_fact_table,
+     spectator_dimension_table
+WHERE spectator_type_table.type_id = spectator_dimension_table.spectator_type
+  AND sales_fact_table.spectator_id = spectator_dimension_table.spectator_id
+GROUP BY ROLLUP (type_name);

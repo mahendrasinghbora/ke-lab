@@ -1,0 +1,8 @@
+a = T1 T2 T4 T6 T7 T9 
+b = T1 T3 T6 T9 
+c = T6 T7 T9 
+d = T2 T3 T5 
+e = T3 T4 T7 T9 
+f = T2 T8 
+g = T2 T8 
+h = T2 T4 T9 

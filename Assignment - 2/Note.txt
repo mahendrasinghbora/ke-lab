@@ -1,0 +1,27 @@
+Assumptions (for random generation)
+1 - Maximum number of transactions = 20
+2 - Maximum number of items in a transaction = 5
+3 - Available items = [a, b, c, d, e, f, g, h]
+
+The directory structure looks like,
+├───First Question
+│   ├───Sample Output - 1
+│   │   ├───Input File
+│   │   ├───Output Files
+│   │   └───Output Screenshots
+│   ├───Sample Output - 2
+│   │   ├───Input File
+│   │   ├───Output Files
+│   │   └───Output Screenshots
+│   └───Source Code
+└───Second Question
+    ├───Assignment - 1 Dataset
+    │   ├───Input File
+    │   ├───Output File
+    │   ├───Output Screenshot
+    │   └───Source Code
+    └───Random Dataset
+        ├───Input File
+        ├───Output File
+        ├───Output Screenshot
+        └───Source Code
