@@ -17,8 +17,6 @@ middle_aged high yes fair yes
 senior medium no excellent no
 */
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
